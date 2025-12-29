@@ -1,0 +1,320 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+}
+
+.settings-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s;
+    margin: 0;
+}
+
+.settings-toggle:hover {
+    background: rgba(102, 126, 234, 0.1);
+    transform: rotate(90deg);
+}
+
+.settings-panel {
+    margin-top: 20px;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+    }
+    to {
+        opacity: 1;
+        max-height: 1000px;
+    }
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 2em;
+}
+
+.date {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 1.1em;
+}
+
+.workout-display {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 30px;
+    margin: 30px 0;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.activity {
+    color: white;
+    font-size: 1.8em;
+    font-weight: bold;
+    margin: 8px 0;
+    text-transform: capitalize;
+    text-align: center;
+    line-height: 1.3;
+}
+
+.activity-icon {
+    font-size: 3em;
+    margin-bottom: 15px;
+}
+
+.activities-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    width: 100%;
+}
+
+.controls {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+button {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin: 5px;
+}
+
+button:hover {
+    background: #764ba2;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.info {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 10px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.preview-section {
+    margin-top: 30px;
+}
+
+.preview-section h2 {
+    color: #333;
+    font-size: 1.3em;
+    margin-bottom: 15px;
+}
+
+.preview-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.preview-item {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.preview-item:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+
+.preview-date {
+    font-weight: 600;
+    color: #495057;
+    min-width: 120px;
+    text-align: left;
+}
+
+.preview-activities {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+.preview-activity-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.preview-activity {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 6px 15px;
+    border-radius: 15px;
+    font-size: 0.9em;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.preview-icon {
+    font-size: 1.5em;
+}
+
+.weather-indicator {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+.weather-good {
+    background: rgba(76, 175, 80, 0.3);
+}
+
+.weather-bad {
+    background: rgba(244, 67, 54, 0.3);
+}
+
+.preview-weather {
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 5px;
+}
+
+.preview-weather.good {
+    color: #4caf50;
+}
+
+.preview-weather.bad {
+    color: #f44336;
+}
+
+.settings-section {
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    text-align: left;
+}
+
+.settings-section h3 {
+    font-size: 1em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.settings-row {
+    margin-bottom: 10px;
+}
+
+.settings-row label {
+    display: block;
+    font-size: 0.85em;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.settings-row input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+
+.settings-row button {
+    margin-top: 5px;
+}
+
+.setup-notice {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    color: #856404;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 0.9em;
+}
+
+.setup-notice a {
+    color: #856404;
+    font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 25px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
+    .activity {
+        font-size: 1.4em;
+    }
+
+    .preview-item {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .preview-date {
+        min-width: auto;
+        text-align: center;
+    }
+
+    .preview-activities {
+        align-items: center;
+    }
+}

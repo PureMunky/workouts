@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Workout Randomizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .date {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .workout-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .activity {
+            color: white;
+            font-size: 1.8em;
+            font-weight: bold;
+            margin: 8px 0;
+            text-transform: capitalize;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .activity-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .activities-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .controls {
+            margin-top: 20px;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .preview-section {
+            margin-top: 30px;
+        }
+
+        .preview-section h2 {
+            color: #333;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .preview-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .preview-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .preview-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .preview-date {
+            font-weight: 600;
+            color: #495057;
+            min-width: 120px;
+            text-align: left;
+        }
+
+        .preview-activities {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .preview-activity-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .preview-activity {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .preview-icon {
+            font-size: 1.5em;
+        }
+
+        .weather-indicator {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .weather-good {
+            background: rgba(76, 175, 80, 0.3);
+        }
+
+        .weather-bad {
+            background: rgba(244, 67, 54, 0.3);
+        }
+
+        .preview-weather {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .preview-weather.good {
+            color: #4caf50;
+        }
+
+        .preview-weather.bad {
+            color: #f44336;
+        }
+
+        .settings-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        .settings-section h3 {
+            font-size: 1em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .settings-row {
+            margin-bottom: 10px;
+        }
+
+        .settings-row label {
+            display: block;
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .settings-row input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .settings-row button {
+            margin-top: 5px;
+        }
+
+        .setup-notice {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .setup-notice a {
+            color: #856404;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .activity {
+                font-size: 1.4em;
+            }
+
+            .preview-item {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .preview-date {
+                min-width: auto;
+                text-align: center;
+            }
+
+            .preview-activities {
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Daily Workout</h1>
+        <div class="date" id="currentDate"></div>
+
+        <div id="setupNotice" class="setup-notice" style="display: none;">
+            To enable weather-based running recommendations, enter your city name below. No API key needed - using free Open-Meteo weather service!
+        </div>
+
+        <div class="workout-display" id="workoutDisplay">
+            <div class="activity-icon" id="activityIcon"></div>
+            <div id="activities"></div>
+            <div id="weatherIndicator"></div>
+        </div>
+
+        <div class="preview-section">
+            <h2>Coming Up This Week</h2>
+            <div class="preview-list" id="previewList"></div>
+        </div>
+
+        <div class="settings-section">
+            <h3>Weather Settings</h3>
+            <div class="settings-row">
+                <label>Your City:</label>
+                <input type="text" id="locationInput" placeholder="e.g., London, New York, Tokyo">
+            </div>
+            <div class="settings-row">
+                <button onclick="saveWeatherSettings()">Save Location</button>
+                <button onclick="clearWeatherSettings()">Clear Location</button>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button onclick="showDifferentDate()">Pick Different Date</button>
+            <button onclick="location.reload()">Refresh</button>
+        </div>
+
+        <div class="info">
+            <strong>Workout Best Practices Applied:</strong><br>
+            • No high-intensity strength training on consecutive days<br>
+            • Same workout never repeats two days in a row<br>
+            • Sundays are recovery days (yoga or table tennis)<br>
+            • Recovery activities often paired with intense workouts<br>
+            • Workouts adapt based on previous day's activity
+        </div>
+    </div>
+
+    <script>
+        const activities = {
+            run: {
+                name: 'Run',
+                icon: '🏃',
+                easy: false,
+                type: 'cardio',
+                intensity: 'high',
+                muscleGroups: ['legs', 'cardio']
+            },
+            swim: {
+                name: 'Swim',
+                icon: '🏊',
+                easy: false,
+                seasonal: true,
+                type: 'cardio',
+                intensity: 'high',
+                muscleGroups: ['fullbody', 'cardio']
+            },
+            weights: {
+                name: 'Lift Weights',
+                icon: '🏋️',
+                easy: false,
+                type: 'strength',
+                intensity: 'high',
+                muscleGroups: ['fullbody', 'strength']
+            },
+            bag: {
+                name: 'Punching Bag',
+                icon: '🥊',
+                easy: false,
+                type: 'cardio',
+                intensity: 'high',
+                muscleGroups: ['arms', 'cardio']
+            },
+            yoga: {
+                name: 'Yoga',
+                icon: '🧘',
+                easy: true,
+                type: 'recovery',
+                intensity: 'low',
+                muscleGroups: ['flexibility']
+            },
+            tabletennis: {
+                name: 'Table Tennis',
+                icon: '🏓',
+                easy: true,
+                type: 'cardio',
+                intensity: 'low',
+                muscleGroups: ['arms', 'cardio']
+            }
+        };
+
+        // Simple seeded random number generator
+        function seededRandom(seed) {
+            const x = Math.sin(seed) * 10000;
+            return x - Math.floor(x);
+        }
+
+        // Generate a seed from a date
+        function dateSeed(date) {
+            return date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate();
+        }
+
+        // Check if it's summer (June, July, August)
+        function isSummer(date) {
+            const month = date.getMonth();
+            return month >= 5 && month <= 7; // 5=June, 6=July, 7=August
+        }
+
+        // Get available activities for a given date
+        function getAvailableActivities(date) {
+            const summer = isSummer(date);
+            return Object.entries(activities).filter(([key, activity]) => {
+                if (activity.seasonal) {
+                    return summer;
+                }
+                return true;
+            });
+        }
+
+        // Check if activity is suitable after previous day's workout
+        function isActivitySuitable(activityKey, activity, previousWorkout) {
+            if (!previousWorkout || previousWorkout.length === 0) return true;
+
+            // Get previous day's primary activity
+            const prevPrimary = previousWorkout[0];
+
+            // RULE 1: Don't do high-intensity strength training on consecutive days
+            if (activity.type === 'strength' && activity.intensity === 'high' &&
+                prevPrimary.type === 'strength' && prevPrimary.intensity === 'high') {
+                return false;
+            }
+
+            // RULE 2: Don't do the same exact activity two days in a row
+            if (activityKey === prevPrimary.key) {
+                return false;
+            }
+
+            // RULE 3: After high-intensity cardio (legs), avoid running the next day
+            if (activityKey === 'run' && prevPrimary.key === 'run') {
+                return false;
+            }
+
+            return true;
+        }
+
+        // Generate workout for a specific date with best practices
+        function generateWorkout(date, previousWorkout = null) {
+            const availableActivities = getAvailableActivities(date);
+            const seed = dateSeed(date);
+
+            // Use seed to pick activities
+            const rand1 = seededRandom(seed);
+            const rand2 = seededRandom(seed + 1);
+            const rand3 = seededRandom(seed + 2);
+            const rand4 = seededRandom(seed + 3);
+
+            // Filter activities based on best practices
+            let suitableActivities = availableActivities.filter(([key, activity]) =>
+                isActivitySuitable(key, activity, previousWorkout)
+            );
+
+            // If no suitable activities (shouldn't happen), use all available
+            if (suitableActivities.length === 0) {
+                suitableActivities = availableActivities;
+            }
+
+            // Every 7th day (based on day of week), prioritize recovery
+            const dayOfWeek = date.getDay();
+            if (dayOfWeek === 0) { // Sunday
+                const recoveryActivities = suitableActivities.filter(([key, act]) =>
+                    act.intensity === 'low'
+                );
+                if (recoveryActivities.length > 0) {
+                    suitableActivities = recoveryActivities;
+                }
+            }
+
+            // Pick primary activity from suitable activities
+            const primaryIndex = Math.floor(rand1 * suitableActivities.length);
+            const [primaryKey, primaryActivity] = suitableActivities[primaryIndex];
+
+            const selectedActivities = [{ key: primaryKey, ...primaryActivity }];
+
+            // Decide if we should add a secondary activity
+            // 40% chance if primary is high intensity, 60% if low intensity
+            const secondaryChance = primaryActivity.intensity === 'high' ? 0.6 : 0.4;
+            const addSecondary = rand3 > secondaryChance;
+
+            if (addSecondary) {
+                // If primary is high intensity, add a low intensity activity
+                // If primary is low intensity, we can add another low or medium activity
+                let secondaryOptions;
+
+                if (primaryActivity.intensity === 'high') {
+                    // Add recovery/stretching after intense workout
+                    secondaryOptions = availableActivities.filter(([key, act]) =>
+                        act.intensity === 'low' && key !== primaryKey
+                    );
+                } else {
+                    // Can add another low-intensity activity
+                    secondaryOptions = availableActivities.filter(([key, act]) =>
+                        act.intensity === 'low' && key !== primaryKey
+                    );
+                }
+
+                if (secondaryOptions.length > 0) {
+                    const secondaryIndex = Math.floor(rand2 * secondaryOptions.length);
+                    const [secondaryKey, secondaryActivity] = secondaryOptions[secondaryIndex];
+                    selectedActivities.push({ key: secondaryKey, ...secondaryActivity });
+                }
+            }
+
+            return selectedActivities;
+        }
+
+        // Display the workout
+        function displayWorkout(date) {
+            const workout = generateWorkout(date);
+
+            // Update date display
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = date.toLocaleDateString('en-US', options);
+
+            // Update activities display
+            const activitiesDiv = document.getElementById('activities');
+            activitiesDiv.innerHTML = workout.map(activity =>
+                `<div class="activity">${activity.name}</div>`
+            ).join('');
+
+            // Update icon (use first activity's icon)
+            document.getElementById('activityIcon').textContent = workout[0].icon;
+
+            // Display upcoming workouts
+            displayUpcomingWorkouts(date);
+        }
+
+        // Display upcoming workouts for the next 6 days
+        function displayUpcomingWorkouts(currentDate) {
+            const previewList = document.getElementById('previewList');
+            const previewHTML = [];
+
+            for (let i = 1; i <= 6; i++) {
+                const futureDate = new Date(currentDate);
+                futureDate.setDate(currentDate.getDate() + i);
+
+                const workout = generateWorkout(futureDate);
+                const dateStr = futureDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+                const activitiesHTML = workout.map(activity =>
+                    `<div class="preview-activity-row">
+                        <span class="preview-icon">${activity.icon}</span>
+                        <span class="preview-activity">${activity.name}</span>
+                    </div>`
+                ).join('');
+
+                previewHTML.push(`
+                    <div class="preview-item">
+                        <div class="preview-date">${dateStr}</div>
+                        <div class="preview-activities">
+                            ${activitiesHTML}
+                        </div>
+                    </div>
+                `);
+            }
+
+            previewList.innerHTML = previewHTML.join('');
+        }
+
+        // Show workout for a different date
+        function showDifferentDate() {
+            const dateStr = prompt('Enter a date (YYYY-MM-DD):');
+            if (dateStr) {
+                const date = new Date(dateStr + 'T12:00:00');
+                if (!isNaN(date.getTime())) {
+                    displayWorkout(date);
+                } else {
+                    alert('Invalid date format. Please use YYYY-MM-DD');
+                }
+            }
+        }
+
+        // Weather-related variables
+        let weatherCache = {};
+
+        // Load weather settings from localStorage
+        function loadWeatherSettings() {
+            const location = localStorage.getItem('weatherLocation');
+            const lat = localStorage.getItem('weatherLat');
+            const lon = localStorage.getItem('weatherLon');
+
+            if (location) document.getElementById('locationInput').value = location;
+
+            if (!location || !lat || !lon) {
+                document.getElementById('setupNotice').style.display = 'block';
+            }
+
+            return { location, lat, lon };
+        }
+
+        // Geocode city name to coordinates using Open-Meteo
+        async function geocodeCity(cityName) {
+            try {
+                const response = await fetch(
+                    `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1&language=en&format=json`
+                );
+
+                if (!response.ok) {
+                    console.error('Geocoding API error:', response.status);
+                    return null;
+                }
+
+                const data = await response.json();
+                if (data.results && data.results.length > 0) {
+                    const result = data.results[0];
+                    return {
+                        lat: result.latitude,
+                        lon: result.longitude,
+                        name: result.name,
+                        country: result.country
+                    };
+                }
+
+                return null;
+            } catch (error) {
+                console.error('Error geocoding city:', error);
+                return null;
+            }
+        }
+
+        // Save weather settings
+        async function saveWeatherSettings() {
+            const location = document.getElementById('locationInput').value.trim();
+
+            if (!location) {
+                alert('Please enter a city name');
+                return;
+            }
+
+            // Geocode the city
+            const coords = await geocodeCity(location);
+            if (!coords) {
+                alert('Could not find that city. Please try another name or be more specific.');
+                return;
+            }
+
+            localStorage.setItem('weatherLocation', location);
+            localStorage.setItem('weatherLat', coords.lat);
+            localStorage.setItem('weatherLon', coords.lon);
+            document.getElementById('setupNotice').style.display = 'none';
+
+            alert(`Location set to ${coords.name}, ${coords.country}. Refreshing...`);
+            location.reload();
+        }
+
+        // Clear weather settings
+        function clearWeatherSettings() {
+            localStorage.removeItem('weatherLocation');
+            localStorage.removeItem('weatherLat');
+            localStorage.removeItem('weatherLon');
+            document.getElementById('locationInput').value = '';
+            document.getElementById('setupNotice').style.display = 'block';
+            weatherCache = {};
+            location.reload();
+        }
+
+        // Fetch weather forecast using Open-Meteo
+        async function getWeatherForecast() {
+            const { lat, lon } = loadWeatherSettings();
+
+            if (!lat || !lon) return null;
+
+            try {
+                const response = await fetch(
+                    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,snowfall_sum,windspeed_10m_max&temperature_unit=fahrenheit&windspeed_unit=mph&timezone=auto&forecast_days=7`
+                );
+
+                if (!response.ok) {
+                    console.error('Weather API error:', response.status);
+                    return null;
+                }
+
+                const data = await response.json();
+
+                // Process forecast data into daily summaries
+                const dailyForecasts = {};
+
+                data.daily.time.forEach((date, index) => {
+                    const tempMax = data.daily.temperature_2m_max[index];
+                    const tempMin = data.daily.temperature_2m_min[index];
+                    const precipitation = data.daily.precipitation_sum[index];
+                    const snowfall = data.daily.snowfall_sum[index];
+                    const windMax = data.daily.windspeed_10m_max[index];
+
+                    dailyForecasts[date] = {
+                        temps: [(tempMax + tempMin) / 2], // Use average temp
+                        tempMax: tempMax,
+                        tempMin: tempMin,
+                        rain: precipitation > 0.1, // More than 0.1 inches
+                        snow: snowfall > 0.1,
+                        wind: [windMax]
+                    };
+                });
+
+                return dailyForecasts;
+            } catch (error) {
+                console.error('Error fetching weather:', error);
+                return null;
+            }
+        }
+
+        // Determine if weather is good for outdoor running
+        function isGoodRunningWeather(forecast) {
+            if (!forecast) return null;
+
+            const avgTemp = forecast.temps.reduce((a, b) => a + b, 0) / forecast.temps.length;
+            const maxWind = Math.max(...forecast.wind);
+
+            // Bad conditions: too cold (<25°F), too hot (>95°F), heavy rain/snow, high wind (>25mph)
+            if (avgTemp < 25 || avgTemp > 95) return { good: false, reason: `${Math.round(avgTemp)}°F - too extreme` };
+            if (forecast.snow) return { good: false, reason: 'Snow expected' };
+            if (forecast.rain) return { good: false, reason: 'Rain expected' };
+            if (maxWind > 25) return { good: false, reason: `High winds ${Math.round(maxWind)}mph` };
+
+            return { good: true, reason: `${Math.round(avgTemp)}°F - good conditions` };
+        }
+
+        // Display the workout with weather info
+        async function displayWorkout(date) {
+            // Get previous day's workout for best practices
+            const previousDate = new Date(date);
+            previousDate.setDate(date.getDate() - 1);
+            const previousWorkout = generateWorkout(previousDate);
+
+            const workout = generateWorkout(date, previousWorkout);
+
+            // Update date display
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = date.toLocaleDateString('en-US', options);
+
+            // Update activities display
+            const activitiesDiv = document.getElementById('activities');
+            activitiesDiv.innerHTML = workout.map(activity =>
+                `<div class="activity">${activity.name}</div>`
+            ).join('');
+
+            // Update icon (use first activity's icon)
+            document.getElementById('activityIcon').textContent = workout[0].icon;
+
+            // Add weather recommendation for running
+            const weatherIndicator = document.getElementById('weatherIndicator');
+            if (workout.some(w => w.key === 'run')) {
+                const dateKey = date.toISOString().split('T')[0];
+                const forecast = weatherCache[dateKey];
+                const weather = isGoodRunningWeather(forecast);
+
+                if (weather) {
+                    const weatherClass = weather.good ? 'weather-good' : 'weather-bad';
+                    const recommendation = weather.good ? '🌤️ Good for outdoor running!' : `⚠️ Consider treadmill: ${weather.reason}`;
+                    weatherIndicator.innerHTML = `<div class="weather-indicator ${weatherClass}">${recommendation}</div>`;
+                } else {
+                    weatherIndicator.innerHTML = '';
+                }
+            } else {
+                weatherIndicator.innerHTML = '';
+            }
+
+            // Display upcoming workouts
+            displayUpcomingWorkouts(date);
+        }
+
+        // Display upcoming workouts for the next 6 days with weather
+        async function displayUpcomingWorkouts(currentDate) {
+            const previewList = document.getElementById('previewList');
+            const previewHTML = [];
+
+            // Track previous workout for proper sequencing
+            let previousWorkout = generateWorkout(currentDate);
+
+            for (let i = 1; i <= 6; i++) {
+                const futureDate = new Date(currentDate);
+                futureDate.setDate(currentDate.getDate() + i);
+
+                // Generate workout considering previous day
+                const workout = generateWorkout(futureDate, previousWorkout);
+                previousWorkout = workout; // Update for next iteration
+
+                const dateStr = futureDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+                const activitiesHTML = workout.map(activity =>
+                    `<div class="preview-activity-row">
+                        <span class="preview-icon">${activity.icon}</span>
+                        <span class="preview-activity">${activity.name}</span>
+                    </div>`
+                ).join('');
+
+                // Add weather info for running days
+                let weatherHTML = '';
+                if (workout.some(w => w.key === 'run')) {
+                    const dateKey = futureDate.toISOString().split('T')[0];
+                    const forecast = weatherCache[dateKey];
+                    const weather = isGoodRunningWeather(forecast);
+
+                    if (weather) {
+                        const weatherClass = weather.good ? 'good' : 'bad';
+                        const weatherText = weather.good ? '✓ Outdoor' : '⚠ Treadmill';
+                        weatherHTML = `<div class="preview-weather ${weatherClass}">${weatherText}</div>`;
+                    }
+                }
+
+                previewHTML.push(`
+                    <div class="preview-item">
+                        <div class="preview-date">${dateStr}${weatherHTML}</div>
+                        <div class="preview-activities">
+                            ${activitiesHTML}
+                        </div>
+                    </div>
+                `);
+            }
+
+            previewList.innerHTML = previewHTML.join('');
+        }
+
+        // Initialize the app
+        async function initializeApp() {
+            loadWeatherSettings();
+
+            // Fetch weather data
+            const forecast = await getWeatherForecast();
+            if (forecast) {
+                weatherCache = forecast;
+            }
+
+            // Display today's workout
+            await displayWorkout(new Date());
+        }
+
+        // Show workout for a different date
+        async function showDifferentDate() {
+            const dateStr = prompt('Enter a date (YYYY-MM-DD):');
+            if (dateStr) {
+                const date = new Date(dateStr + 'T12:00:00');
+                if (!isNaN(date.getTime())) {
+                    await displayWorkout(date);
+                } else {
+                    alert('Invalid date format. Please use YYYY-MM-DD');
+                }
+            }
+        }
+
+        // Initialize
+        initializeApp();
+    </script>
+</body>
+</html>
